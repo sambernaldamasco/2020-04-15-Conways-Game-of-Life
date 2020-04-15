@@ -45,6 +45,9 @@ function App() {
 	//generating new board
 	const newBoard = () => setBoardStatus(generateBoardStatus());
 
+	//takes the index for row/column when called and evaluates if
+	//the cell is on the board and reduce the neighbor cells to an array only with cells that are true
+
 	const aliveCells = (row, column) => {
 		//checking only the 4 imminent "neighbour" cells
 		const neighbourCells = [
