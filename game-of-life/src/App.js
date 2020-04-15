@@ -45,69 +45,73 @@ function App() {
 	//generating new board
 	const newBoard = () => setBoardStatus(generateBoardStatus());
 
+	const aliveCells = (row, column) => {
+		//checking only the 4 imminent "neighbour" cells
+		const neighbourCells = [
+			[-1, -1],
+			[-1, 0],
+			[-1, 1],
+			[0, 1],
+			[1, 1],
+			[1, 0],
+			[1, -1],
+			[0, -1],
+		];
+
+		return neighbourCells.reduce((aliveCells, cells) => {
+			const rowPosition = row + cells[0];
+			const columnPosition = column + cells[1];
+
+			const isCellOnBoard =
+				rowPosition >= 0 &&
+				rowPosition < boardRows &&
+				columnPosition >= 0 &&
+				columnPosition < boardColumns;
+
+			if (
+				aliveCells < 4 &&
+				isCellOnBoard &&
+				boardStatus[(rowPosition, columnPosition)]
+			) {
+				return aliveCells + 1;
+			} else {
+				return aliveCells;
+			}
+		}, 0);
+	}; //closing function alive cells
+
 	const updateBoard = () => {
 		const clonedBoard = [...boardStatus];
 		console.log(clonedBoard);
 
-		const aliveCells = (row, column) => {
-			//checking only the 4 imminent "neighbour" cells
-			const neighbourCells = [
-				[-1, -1],
-				[-1, 0],
-				[-1, 1],
-				[0, 1],
-				[1, 1],
-				[1, 0],
-				[1, -1],
-				[0, -1],
-			];
+		for (let r = 0; r < boardRows; r++) {
+			for (let c = 0; c < boardColumns; c++) {
+				const totalAliveCells = aliveCells(r, c);
 
-			const checkAliveCells = neighbourCells.reduce((aliveCells, cells) => {
-				const rowPosition = row + cells[0];
-				const columnPosition = column + cells[1];
-
-				const isCellOnBoard =
-					rowPosition >= 0 &&
-					rowPosition < boardRows &&
-					columnPosition >= 0 &&
-					columnPosition < boardColumns;
-
-				if (
-					aliveCells < 4 &&
-					isCellOnBoard &&
-					boardStatus[(rowPosition, columnPosition)]
-				) {
-					return aliveCells + 1;
-				} else {
-					return aliveCells;
-				}
-			}, 0);
-		}; //closing function alive cells
-
-		for (let row = 0; row < boardRows; row++) {
-			for (let column = 0; row < boardColumns; column++) {
-				const totalAliveCells = aliveCells(row, column);
-
-				if (!boardStatus[row][column]) {
-					if (totalAliveCells === 3) clonedBoard[row][column] = true;
+				if (!boardStatus[r][c]) {
+					if (totalAliveCells === 3) clonedBoard[r][c] = true;
 				} else {
 					if (totalAliveCells < 2 || totalAliveCells > 3)
-						clonedBoard[row][column] = false;
+						clonedBoard[r][c] = false;
 				}
 			} //closing column for
 		} //closing row for
-
 		console.log(clonedBoard);
 		return clonedBoard;
 	};
 
 	return (
 		<div className="App">
-			<Board boardStatus={boardStatus} />
+			{updateBoard()}
+			<Board
+				boardStatus={boardStatus}
+				boardRows={boardRows}
+				boardColumns={boardColumns}
+			/>
 			{runGame ? (
 				<button onClick={() => setRunGame(false)}>stop</button>
 			) : (
-				<button onClick={() => updateBoard()}>start</button>
+				<button onClick={() => setRunGame(true)}>start</button>
 			)}
 		</div>
 	);

@@ -3,9 +3,10 @@ import React from 'react';
 function Board(props) {
 	//generating board grid
 	const generateGrid = () => {
-		for (let row = 0; row < boardRows; row++) {
+		const tableRow = [];
+		for (let row = 0; row < props.boardRows; row++) {
 			const tableData = [];
-			for (let column = 0; column < boardColumns; column++) {
+			for (let column = 0; column < props.boardColumns; column++) {
 				tableData.push(
 					<td
 						key={`${row}, ${column}`}
