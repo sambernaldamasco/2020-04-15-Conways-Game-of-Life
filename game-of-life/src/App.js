@@ -36,9 +36,6 @@ function App() {
 	//boolean for start/pause
 	const [runGame, setRunGame] = useState(false);
 
-	//speed of the game
-	const speed = 200;
-
 	//takes the index for row/column when called and evaluates if
 	//the cell is on the board and reduce the neighbor cells to an array only with cells that are true
 	const aliveCells = (row, column) => {
@@ -94,13 +91,11 @@ function App() {
 		return clonedBoard;
 	};
 
-	const refreshBoard = () => {
-		setRunGame(true);
-		setInterval(() => {
-			let newBoard = updateBoard();
-			setBoardStatus(newBoard);
-		}, 5000);
-	};
+	useEffect(() => {
+		setTimeout(() => {
+			setBoardStatus(updateBoard());
+		}, 300);
+	}, [boardStatus]);
 
 	return (
 		<div className="App">
@@ -109,7 +104,6 @@ function App() {
 				boardRows={boardRows}
 				boardColumns={boardColumns}
 			/>
-			{runGame ? null : <button onClick={() => refreshBoard()}>start</button>}
 		</div>
 	);
 }
