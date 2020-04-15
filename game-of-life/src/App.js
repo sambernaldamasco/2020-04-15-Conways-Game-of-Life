@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Board from './components/Board';
@@ -8,13 +8,13 @@ import Board from './components/Board';
 // Any dead cell touching exactly three alive neighbours becomes alive.
 
 //number of rows/columns
-const boardRows = 10;
-const boardColumns = 10;
+const boardRows = 50;
+const boardColumns = 50;
 
 //cellInitialStatus returns random true/false value to identify alive/dead statuses
 //and it's the default value for the argument
 const generateBoardStatus = (
-	cellInitialStatus = () => Math.random() >= 0.5
+	cellInitialStatus = () => Math.random() >= 0.8
 ) => {
 	const grid = [];
 	//generating the rows
@@ -37,13 +37,7 @@ function App() {
 	const [runGame, setRunGame] = useState(false);
 
 	//speed of the game
-	const [speed, setSpeed] = useState(200);
-
-	//clearing the board by updating the state and sending an anonymous function to generateBoardStatus as false
-	const clearBoard = () => setBoardStatus(generateBoardStatus(() => false));
-
-	//generating new board
-	const newBoard = () => setBoardStatus(generateBoardStatus());
+	const speed = 200;
 
 	//takes the index for row/column when called and evaluates if
 	//the cell is on the board and reduce the neighbor cells to an array only with cells that are true
@@ -83,13 +77,12 @@ function App() {
 	}; //closing function alive cells
 
 	const updateBoard = () => {
-		let clonedBoard = [...boardStatus];
-		console.log(clonedBoard);
+		//having to do this due to JS not allowing clone of multidimensional arrays
+		let clonedBoard = JSON.parse(JSON.stringify(boardStatus));
 
 		for (let r = 0; r < boardRows; r++) {
 			for (let c = 0; c < boardColumns; c++) {
 				const totalAliveCells = aliveCells(r, c);
-				console.log(totalAliveCells);
 				if (!boardStatus[r][c]) {
 					if (totalAliveCells === 3) clonedBoard[r][c] = true;
 				} else {
@@ -102,27 +95,21 @@ function App() {
 	};
 
 	const refreshBoard = () => {
-		let test;
-		if (runGame) {
-			updateBoard();
-		} else {
-			clearInterval(test);
-		}
+		setRunGame(true);
+		setInterval(() => {
+			let newBoard = updateBoard();
+			setBoardStatus(newBoard);
+		}, 5000);
 	};
 
 	return (
 		<div className="App">
-			{refreshBoard()}
 			<Board
 				boardStatus={boardStatus}
 				boardRows={boardRows}
 				boardColumns={boardColumns}
 			/>
-			{runGame ? (
-				<button onClick={() => setRunGame(false)}>stop</button>
-			) : (
-				<button onClick={() => setRunGame(true)}>start</button>
-			)}
+			{runGame ? null : <button onClick={() => refreshBoard()}>start</button>}
 		</div>
 	);
 }

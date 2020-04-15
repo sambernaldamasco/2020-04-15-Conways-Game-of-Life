@@ -1,7 +1,7 @@
 table {
 	margin: 0 auto 20px auto;
 	border-collapse: collapse;
-	background-color: black;
+	background-color: white;
 }
 
 td {
@@ -11,7 +11,7 @@ td {
 }
 
 .alive {
-	background-color: white;
+	background-color: black;
 }
 
 .App {
