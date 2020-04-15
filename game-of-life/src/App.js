@@ -47,7 +47,6 @@ function App() {
 
 	//takes the index for row/column when called and evaluates if
 	//the cell is on the board and reduce the neighbor cells to an array only with cells that are true
-
 	const aliveCells = (row, column) => {
 		//checking only the 4 imminent "neighbour" cells
 		const neighbourCells = [
@@ -74,7 +73,7 @@ function App() {
 			if (
 				aliveCells < 4 &&
 				isCellOnBoard &&
-				boardStatus[(rowPosition, columnPosition)]
+				boardStatus[rowPosition][columnPosition]
 			) {
 				return aliveCells + 1;
 			} else {
@@ -84,13 +83,13 @@ function App() {
 	}; //closing function alive cells
 
 	const updateBoard = () => {
-		const clonedBoard = [...boardStatus];
+		let clonedBoard = [...boardStatus];
 		console.log(clonedBoard);
 
 		for (let r = 0; r < boardRows; r++) {
 			for (let c = 0; c < boardColumns; c++) {
 				const totalAliveCells = aliveCells(r, c);
-
+				console.log(totalAliveCells);
 				if (!boardStatus[r][c]) {
 					if (totalAliveCells === 3) clonedBoard[r][c] = true;
 				} else {
@@ -99,13 +98,21 @@ function App() {
 				}
 			} //closing column for
 		} //closing row for
-		console.log(clonedBoard);
 		return clonedBoard;
+	};
+
+	const refreshBoard = () => {
+		let test;
+		if (runGame) {
+			updateBoard();
+		} else {
+			clearInterval(test);
+		}
 	};
 
 	return (
 		<div className="App">
-			{updateBoard()}
+			{refreshBoard()}
 			<Board
 				boardStatus={boardStatus}
 				boardRows={boardRows}
