@@ -97,6 +97,7 @@ function App() {
 			} //closing column for
 		} //closing row for
 
+		console.log(clonedBoard);
 		return clonedBoard;
 	};
 
