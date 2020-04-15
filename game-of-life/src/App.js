@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Board from './components/Board';
+
 // Any alive cell that is touching less than two alive neighbours dies.
 // Any alive cell touching four or more alive neighbours dies.
 // Any alive cell touching two or three alive neighbours does nothing.
@@ -14,7 +15,7 @@ const boardColumns = 50;
 //cellInitialStatus returns random true/false value to identify alive/dead statuses
 //and it's the default value for the argument
 const generateBoardStatus = (
-	cellInitialStatus = () => Math.random() >= 0.8
+	cellInitialStatus = () => Math.random() >= 0.6
 ) => {
 	const grid = [];
 	//generating the rows
@@ -91,6 +92,7 @@ function App() {
 		return clonedBoard;
 	};
 
+	//setting timeout to trigger the board changes
 	useEffect(() => {
 		setTimeout(() => {
 			setBoardStatus(updateBoard());
